@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import MenuIA from './MenuIA';
+import SimularML from './SimularML';
 import './App.css';
 
 // Ícono de avión SVG
@@ -82,9 +83,16 @@ function App() {
     setVueloSeleccionado(vuelo);
     setVistaActual('menuia');
   };
+  const handleSimularML = (vuelo) => {
+    setVueloSeleccionado(vuelo);
+    setVistaActual('ml');
+  };
 
   if (vistaActual === 'menuia') {
     return <MenuIA vueloSeleccionado={vueloSeleccionado} onBack={() => setVistaActual('vuelos')} />;
+  }
+  else  if (vistaActual === 'ml') {
+    return <SimularML vueloSeleccionado={vueloSeleccionado} onBack={() => setVistaActual('vuelos')} />;
   }
   return (
     <div className="app-container">
@@ -185,7 +193,7 @@ function App() {
                 </span>
               </div>
               <div>
-                <button className="action-button">Simular Menú con ML</button>
+                <button className="action-button" onClick={() => handleSimularML(vuelo)}>Simular Menú con ML</button>
               </div>
               <div>
                 <button className="action-button" onClick={() => handleGenerarMenuIA(vuelo)}
