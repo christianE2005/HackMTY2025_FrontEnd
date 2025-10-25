@@ -301,3 +301,75 @@
       grid-template-columns: 1fr;
     }
   }
+  /* Gráfico de Costos */
+.costos-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 0;
+  }
+  
+  .costo-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .costo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .costo-categoria {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 14px;
+  }
+  
+  .costo-monto {
+    font-weight: 500;
+    color: #60a5fa;
+    font-size: 14px;
+  }
+  
+  .costo-bar-wrapper {
+    width: 100%;
+    height: 32px;
+    background-color: #e5e7eb;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .costo-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #60a5fa 0%, #3b82f6 100%);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 12px;
+    transition: width 0.4s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .costo-porcentaje {
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  
+  .costo-total {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 2px solid #e5e7eb;
+    text-align: right;
+    font-size: 16px;
+    color: #1f2937;
+  }
+  
+  .costo-total strong {
+    color: #60a5fa;
+    margin-right: 8px;
+  }

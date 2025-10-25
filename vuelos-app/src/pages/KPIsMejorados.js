@@ -39,12 +39,14 @@ const KPIsMejorados = ({ onBack, vueloSeleccionado }) => {
     desperdicio: 12
   });
 
-  const [beneficios] = useState([
-    { titulo: 'Rating', valor: '4.3/5', icono: '⭐' },
-    { titulo: 'Aceptación', valor: '90%', icono: '✓' },
-    { titulo: 'Reducción Desperdicio', valor: '15%', icono: '📉' },
-    { titulo: 'Ahorro Estimado', valor: '$450 MXN', icono: '💰' }
+  const [costos] = useState([
+    { categoria: 'Bebidas', costo: 850, porcentaje: 30 },
+    { categoria: 'Alimentos', costo: 1420, porcentaje: 50 },
+    { categoria: 'Snacks', costo: 340, porcentaje: 12 },
+    { categoria: 'Otros', costo: 230, porcentaje: 8 }
   ]);
+
+  const costoTotal = costos.reduce((sum, item) => sum + item.costo, 0);
 
   return (
     <div className="kpis-container">
@@ -76,33 +78,29 @@ const KPIsMejorados = ({ onBack, vueloSeleccionado }) => {
           <div className="kpi-card">
             <div className="kpi-icon">📊</div>
             <h3>RCP</h3>
-            <p className="kpi-title-desc">Ratio de Consumo por Pasajero</p>
             <p className="kpi-value">{kpis.rcp}</p>
-            <p className="kpi-formula">Quantity_Consumed / Passenger_Count</p>
+            <p className="kpi-title-desc">Ratio de Consumo por Pasajero</p>
           </div>
 
           <div className="kpi-card">
             <div className="kpi-icon">💰</div>
             <h3>CTD</h3>
-            <p className="kpi-title-desc">Costo Total de Desperdicio</p>
             <p className="kpi-value">${kpis.ctd} MXN</p>
-            <p className="kpi-formula">Σ(Quantity_Returned × Unit_Cost)</p>
+            <p className="kpi-title-desc">Costo Total de Desperdicio</p>
           </div>
 
           <div className="kpi-card">
             <div className="kpi-icon">💵</div>
             <h3>CPP</h3>
-            <p className="kpi-title-desc">Costo por Pasajero</p>
             <p className="kpi-value">${kpis.cpp} MXN</p>
-            <p className="kpi-formula">Σ(Quantity_Consumed × Unit_Cost) / Passenger_Count</p>
+            <p className="kpi-title-desc">Costo por Pasajero</p>
           </div>
 
           <div className="kpi-card">
             <div className="kpi-icon">📦</div>
             <h3>PUT</h3>
-            <p className="kpi-title-desc">Tasa de Utilización por Producto</p>
             <p className="kpi-value">{kpis.put}%</p>
-            <p className="kpi-formula">Quantity_Consumed / (Consumed + Returned) × 100</p>
+            <p className="kpi-title-desc">Tasa de Utilización por Producto</p>
           </div>
         </div>
 
@@ -179,19 +177,31 @@ const KPIsMejorados = ({ onBack, vueloSeleccionado }) => {
               </div>
             </div>
 
-            {/* Gráfico 3: Beneficios */}
+            {/* Gráfico 3: Distribución de Costos */}
             <div className="grafico-card">
-              <h3>✨ Beneficios del Menú Optimizado</h3>
-              <div className="chart-container beneficios-grid">
-                {beneficios.map((beneficio, index) => (
-                  <div key={index} className="beneficio-item">
-                    <div className="beneficio-icon">{beneficio.icono}</div>
-                    <div className="beneficio-content">
-                      <p className="beneficio-titulo">{beneficio.titulo}</p>
-                      <p className="beneficio-valor">{beneficio.valor}</p>
+              <h3>💰 Distribución de Costos por Categoría</h3>
+              <div className="chart-container">
+                <div className="costos-chart">
+                  {costos.map((item, index) => (
+                    <div key={index} className="costo-item">
+                      <div className="costo-header">
+                        <span className="costo-categoria">{item.categoria}</span>
+                        <span className="costo-monto">${item.costo} MXN</span>
+                      </div>
+                      <div className="costo-bar-wrapper">
+                        <div 
+                          className="costo-bar-fill" 
+                          style={{ width: `${item.porcentaje}%` }}
+                        >
+                          <span className="costo-porcentaje">{item.porcentaje}%</span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                <div className="costo-total">
+                  <strong>Costo Total:</strong> ${costoTotal} MXN
+                </div>
               </div>
             </div>
           </div>
