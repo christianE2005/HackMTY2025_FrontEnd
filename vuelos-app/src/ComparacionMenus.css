@@ -1,0 +1,276 @@
+.comparacion-container {
+    min-height: 100vh;
+    background-color: #DEEDFF;
+  }
+  
+  .header-content-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  
+  .header-buttons {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .header-btn-back {
+    padding: 8px 20px;
+    background-color: #60a5fa;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .header-btn-back:hover {
+    background-color: #3b82f6;
+  }
+  
+  .main-content-comparacion {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+  
+  .comparacion-title-section {
+    margin-bottom: 24px;
+  }
+  
+  .comparacion-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 8px;
+  }
+  
+  .comparacion-subtitle {
+    font-size: 16px;
+    color: #6b7280;
+  }
+  
+  /* Menus Grid */
+  .menus-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  
+  .menu-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  .menu-card-header {
+    padding: 20px;
+    color: white;
+    font-weight: 600;
+  }
+  
+  .usuario-header {
+    background-color: #60a5fa;
+  }
+  
+  .recomendado-header {
+    background-color: #10b981;
+  }
+  
+  .menu-card-header h2 {
+    margin: 0;
+    font-size: 20px;
+  }
+  
+  .menu-card-info {
+    padding: 16px 20px;
+    background-color: #f9fafb;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  
+  .menu-card-info p {
+    margin: 4px 0;
+    color: #4b5563;
+    font-size: 14px;
+  }
+  
+  .menu-card-content {
+    padding: 20px;
+  }
+  
+  .menu-card-content h3 {
+    color: #1f2937;
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  
+  /* Menu Items */
+  .menu-item-comp {
+    padding: 16px;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    transition: all 0.2s;
+  }
+  
+  .menu-item-comp:hover {
+    background-color: #f3f4f6;
+  }
+  
+  .item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .item-nombre {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 16px;
+  }
+  
+  .item-cantidad {
+    color: #6b7280;
+    font-size: 14px;
+  }
+  
+  .item-consumo {
+    margin-top: 8px;
+  }
+  
+  .consumo-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background-color: #dbeafe;
+    color: #1e40af;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  
+  /* Cantidad Input */
+  .cantidad-input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  
+  .cantidad-input-group label {
+    color: #6b7280;
+    font-size: 14px;
+  }
+  
+  .cantidad-input {
+    width: 80px;
+    padding: 6px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+  }
+  
+  .cantidad-input:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+  }
+  
+  /* Métricas y Sections */
+  .metricas-usuario,
+  .insights-section,
+  .beneficios-section {
+    margin-top: 24px;
+    padding: 16px;
+    background-color: rgba(96, 165, 250, 0.1);
+    border-radius: 8px;
+  }
+  
+  .metricas-usuario h4,
+  .insights-section h4,
+  .beneficios-section h4 {
+    color: #1f2937;
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+  
+  .metricas-usuario ul,
+  .insights-section ul,
+  .beneficios-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .metricas-usuario li,
+  .insights-section li,
+  .beneficios-section li {
+    padding: 6px 0;
+    color: #4b5563;
+    font-size: 14px;
+  }
+  
+  .metricas-usuario li:before,
+  .insights-section li:before,
+  .beneficios-section li:before {
+    content: "• ";
+    color: #60a5fa;
+    font-weight: bold;
+    margin-right: 8px;
+  }
+  
+  .confianza-badge {
+    margin-top: 16px;
+    padding: 12px;
+    background-color: #10b981;
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+  }
+  
+  /* Action Buttons */
+  .action-buttons-comparacion {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+  }
+  
+  .comp-btn {
+    padding: 12px 32px;
+    background-color: #60a5fa;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .comp-btn:hover {
+    background-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .menus-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .action-buttons-comparacion {
+      flex-direction: column;
+    }
+  }
