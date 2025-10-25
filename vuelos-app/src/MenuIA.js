@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './MenuIA.css';
 
 // Ícono de flecha para regresar
@@ -18,15 +19,17 @@ const ArrowLeftIcon = () => (
   </svg>
 );
 
-const MenuIA = ({ onBack }) => {
+const MenuIA = ({ onBack, vueloSeleccionado: vueloProp }) => {
+  const navigate = useNavigate();
   const [chatInput, setChatInput] = useState('');
-  const [vueloSeleccionado] = useState({
+  const vueloDefault = {
     id: 'AM 401',
     origen: 'MTY',
     destino: 'MEX',
     capacidad: 184,
     fecha: '18 Oct 2025'
-  });
+  };
+  const vueloSeleccionado = vueloProp || vueloDefault;
 
   const [menuSugerido] = useState([
     {
@@ -162,7 +165,7 @@ const MenuIA = ({ onBack }) => {
           <button className="action-btn">
             Ver KPIs Mejorados
           </button>
-          <button className="action-btn">
+          <button className="action-btn" onClick={() => navigate('/inventario')}>
             Ver Inventario Completo
           </button>
         </div>
