@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import MenuIA from './MenuIA';
 import './App.css';
 
 // Ícono de avión SVG
@@ -38,6 +39,8 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState('24-10-2025');
   const [tipoVuelo, setTipoVuelo] = useState('nacionales');
+  const [vistaActual, setVistaActual] = useState('vuelos'); // 'vuelos' o 'menuia'
+  const [vueloSeleccionado, setVueloSeleccionado] = useState(null);
   const [vuelos] = useState([
     {
       id: 1,
@@ -75,6 +78,14 @@ function App() {
     console.log('Filtrando vuelos...', { searchTerm, startDate, tipoVuelo });
   };
 
+  const handleGenerarMenuIA = (vuelo) => {
+    setVueloSeleccionado(vuelo);
+    setVistaActual('menuia');
+  };
+
+  if (vistaActual === 'menuia') {
+    return <MenuIA vueloSeleccionado={vueloSeleccionado} onBack={() => setVistaActual('vuelos')} />;
+  }
   return (
     <div className="app-container">
       {/* Header */}
@@ -177,7 +188,8 @@ function App() {
                 <button className="action-button">Simular Menú con ML</button>
               </div>
               <div>
-                <button className="action-button">Generar Menú con IA</button>
+                <button className="action-button" onClick={() => handleGenerarMenuIA(vuelo)}
+                  >Generar Menú con IA</button>
               </div>
             </div>
           ))}
