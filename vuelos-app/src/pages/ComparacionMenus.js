@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import KPIsMejorados from './KPIsMejorados';
 import './ComparacionMenus.css';
 
 // Ícono de flecha para regresar
@@ -25,6 +26,7 @@ const ComparacionMenus = ({ onBack, archivoUsuario, vueloSeleccionado }) => {
     { id: 3, nombre: 'Jugo de Naranja', cantidad: 160, consumido: 87 }
   ]);
 
+  const [mostrarKPIs, setMostrarKPIs] = useState(false);
   const [menuSugerido, setMenuSugerido] = useState([
     { id: 1, nombre: 'Pollo en Salsa de Chipotle', cantidad: 91, sugerido: true },
     { id: 2, nombre: 'Pasta Alfredo Vegetales', cantidad: 70, sugerido: true },
@@ -63,8 +65,11 @@ const ComparacionMenus = ({ onBack, archivoUsuario, vueloSeleccionado }) => {
   };
 
   const handleKPIs = () => {
-    console.log('Navegando a KPIs Mejorados');
+    setMostrarKPIs(true);
   };
+  if (mostrarKPIs) {
+    return <KPIsMejorados onBack={() => setMostrarKPIs(false)} vueloSeleccionado={vueloSeleccionado} />;
+  }
 
   return (
     <div className="comparacion-container">
