@@ -90,13 +90,10 @@ function Home() {
     setVueloSeleccionado(vuelo);
     setVistaActual('ml');
   };
-  const handleSimularML = (vuelo) => {
-    setVueloSeleccionado(vuelo);
-    setVistaActual('ml');
-  };
-
-  if (vistaActual === 'menuia') {
+  if (vistaActual === 'menui-a') {
     return <MenuIA vueloSeleccionado={vueloSeleccionado} onBack={() => setVistaActual('vuelos')} />;
+  }else  if (vistaActual === 'ml') {
+    return <SimularML vueloSeleccionado={vueloSeleccionado} onBack={() => setVistaActual('vuelos')} />;
   }
   return (
     <div className="app-container">
