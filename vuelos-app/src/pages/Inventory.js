@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getInventoryFlat } from '../services/productService';
 import '../App.css';
 
 // Ícono de flecha para regresar
@@ -28,29 +29,65 @@ const Inventory = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Try to fetch from a backend endpoint. If it doesn't exist, fall back to mock data.
-    fetch('/api/inventario')
-      .then((res) => {
-        if (!res.ok) throw new Error('Network response was not ok');
-        return res.json();
-      })
-      .then((data) => {
-        setItems(data);
+    // Fetch products from backend using the productService
+    const loadProducts = async () => {
+      try {
+        setLoading(true);
+        const products = await getInventoryFlat();
+        setItems(products);
         setLoading(false);
-      })
-      .catch((err) => {
-        console.warn('Error fetching /api/inventario:', err);
+      } catch (err) {
+        console.error('Error cargando productos desde el backend:', err);
         // Fallback mock data
         const mock = [
-          { id: 1, nombre: 'Pollo en Salsa de Chipotle', cantidad: 92 },
-          { id: 2, nombre: 'Pasta Alfredo Vegetales', cantidad: 70 },
-          { id: 3, nombre: 'Jugo de Naranja', cantidad: 92 },
-          { id: 4, nombre: 'Ensalada César', cantidad: 50 }
+          { 
+            id: '1', 
+            product_code: 'PROD001',
+            name: 'Pollo en Salsa de Chipotle', 
+            description: 'Plato principal',
+            weight_or_volume: '250g',
+            lot_number: 'LOT-2024-001',
+            expiry_date: '2025-12-31',
+            quantity: 92 
+          },
+          { 
+            id: '2', 
+            product_code: 'PROD002',
+            name: 'Pasta Alfredo Vegetales', 
+            description: 'Plato vegetariano',
+            weight_or_volume: '300g',
+            lot_number: 'LOT-2024-002',
+            expiry_date: '2025-11-30',
+            quantity: 70 
+          },
+          { 
+            id: '3', 
+            product_code: 'PROD003',
+            name: 'Jugo de Naranja', 
+            description: 'Bebida natural',
+            weight_or_volume: '250ml',
+            lot_number: 'LOT-2024-003',
+            expiry_date: '2025-10-31',
+            quantity: 92 
+          },
+          { 
+            id: '4', 
+            product_code: 'PROD004',
+            name: 'Ensalada César', 
+            description: 'Entrada fresca',
+            weight_or_volume: '200g',
+            lot_number: 'LOT-2024-004',
+            expiry_date: '2025-10-28',
+            quantity: 50 
+          }
         ];
         setItems(mock);
-        setError('No se pudo cargar desde /api/inventario — usando datos de ejemplo.');
+        setError('No se pudo conectar con el backend — usando datos de ejemplo. Asegúrate de que el backend esté corriendo en http://localhost:8000 y que el endpoint /api/v1/products/inventory/flat exista');
         setLoading(false);
-      });
+      }
+    };
+    
+    loadProducts();
   }, []);
 
   return (
@@ -79,76 +116,80 @@ const Inventory = () => {
           <p>Cargando inventario...</p>
         ) : (
           <div>
-              {error && <p style={{ color: 'orange' }}>{error}</p>}
-              <div style={{ overflowX: 'auto' }}>
-                {/* Top bar: title + search (placed outside the white card) */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '0 0 8px 0' }}>
-                  <div style={{ fontWeight: 600 }}>Listado de productos</div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{ position: 'relative' }}>
-                      <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Buscar..."
-                        style={{
-                          padding: '8px 32px 8px 10px',
-                          borderRadius: '6px',
-                          border: '1px solid #e5e7eb',
-                          background: '#ffffff'
-                        }}
-                      />
-                      <svg viewBox="0 0 24 24" width="18" height="18" style={{ position: 'absolute', right: 8, top: 6, pointerEvents: 'none', color: '#9ca3af' }}>
-                        <circle cx="11" cy="11" r="7" stroke="#9ca3af" strokeWidth="1.5" fill="none" />
-                        <path d="M21 21l-4.35-4.35" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" />
-                      </svg>
-                    </div>
+            {error && <p style={{ color: 'orange' }}>{error}</p>}
+
+            <div style={{ overflowX: 'auto' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '0 0 8px 0' }}>
+                <div style={{ fontWeight: 600 }}>Listado de productos</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      placeholder="Buscar..."
+                      style={{
+                        padding: '8px 32px 8px 10px',
+                        borderRadius: '6px',
+                        border: '1px solid #e5e7eb',
+                        background: '#ffffff'
+                      }}
+                    />
+                    <svg viewBox="0 0 24 24" width="18" height="18" style={{ position: 'absolute', right: 8, top: 6, pointerEvents: 'none', color: '#9ca3af' }}>
+                      <circle cx="11" cy="11" r="7" stroke="#9ca3af" strokeWidth="1.5" fill="none" />
+                      <path d="M21 21l-4.35-4.35" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" />
+                    </svg>
                   </div>
                 </div>
+              </div>
 
-                <div style={{ backgroundColor: '#ffffff', padding: '12px', borderRadius: '8px', boxShadow: '0 1px 4px rgba(16,24,40,0.06)', overflow: 'hidden' }}>
-                  {/* make table extend to card edges so header covers full width */}
-                  <table className="inventory-table" style={{ width: 'calc(100% + 24px)', marginLeft: '-12px', marginRight: '-12px', marginTop: '-12px', borderCollapse: 'collapse', backgroundColor: '#ffffff' }}>
-                <thead>
-                    <tr style={{ textAlign: 'left', borderBottom: '2px solid rgba(255,255,255,0.08)', backgroundColor: '#1D2C66' }}>
-                      <th style={{ padding: '8px 12px', color: '#ffffff', fontWeight: 600, borderTopLeftRadius: '8px' }}>Product ID</th>
-                      <th style={{ padding: '8px 12px', color: '#ffffff', fontWeight: 600 }}>Product Name</th>
-                      <th style={{ padding: '8px 12px', color: '#ffffff', fontWeight: 600 }}>Weight or Volume</th>
-                      <th style={{ padding: '8px 12px', color: '#ffffff', fontWeight: 600 }}>LOT Number</th>
-                      <th style={{ padding: '8px 12px', color: '#ffffff', fontWeight: 600 }}>Expiry Date</th>
-                      <th style={{ padding: '8px 12px', color: '#ffffff', fontWeight: 600, borderTopRightRadius: '8px' }}>Quantity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  {items
-                    .filter((it) => {
-                      const term = searchTerm.trim().toLowerCase();
-                      if (!term) return true;
-                      const values = [
-                        it.id,
-                        it.nombre || it.Product_Name,
-                        it.weight || it.Weight_or_Volume,
-                        it.lot || it.LOT_Number,
-                        it.expiry || it.Expiry_Date,
-                        it.cantidad ?? it.Quantity
-                      ]
-                        .filter((v) => v !== undefined && v !== null)
-                        .map((v) => String(v).toLowerCase())
-                        .join(' ');
-                      return values.includes(term);
-                    })
-                    .map((it) => (
-                    <tr key={it.id} style={{ borderBottom: '1px solid #f3f4f6' }}>
-                      <td style={{ padding: '10px 12px', width: '80px' }}><strong>{it.id}</strong></td>
-                      <td style={{ padding: '10px 12px' }}>{it.nombre || it.Product_Name || ''}</td>
-                      <td style={{ padding: '10px 12px' }}>{it.weight || it.Weight_or_Volume || ''}</td>
-                      <td style={{ padding: '10px 12px' }}>{it.lot || it.LOT_Number || ''}</td>
-                      <td style={{ padding: '10px 12px' }}>{it.expiry || it.Expiry_Date || ''}</td>
-                      <td style={{ padding: '10px 12px', width: '140px' }}>{it.cantidad ?? it.Quantity ?? ''}</td>
-                    </tr>
-                  ))}
-                </tbody>
-                </table>
+              <div className="inventory-card">
+                  <div className="inventory-scroll">
+                  <table className="inventory-table" style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'transparent' }}>
+                    <thead>
+                      <tr style={{ textAlign: 'left', borderBottom: '2px solid rgba(255,255,255,0.08)', backgroundColor: '#1D2C66' }}>
+                        <th style={{ padding: '8px 12px', color: '#ffffff', fontWeight: 600, borderTopLeftRadius: '8px' }}>Product Code</th>
+                        <th style={{ padding: '8px 12px', color: '#ffffff', fontWeight: 600 }}>Product Name</th>
+                        <th style={{ padding: '8px 12px', color: '#ffffff', fontWeight: 600 }}>Description</th>
+                        <th style={{ padding: '8px 12px', color: '#ffffff', fontWeight: 600 }}>Weight/Volume</th>
+                        <th style={{ padding: '8px 12px', color: '#ffffff', fontWeight: 600 }}>LOT Number</th>
+                        <th style={{ padding: '8px 12px', color: '#ffffff', fontWeight: 600 }}>Expiry Date</th>
+                        <th style={{ padding: '8px 12px', color: '#ffffff', fontWeight: 600, borderTopRightRadius: '8px' }}>Quantity</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {items
+                        .filter((it) => {
+                          const term = searchTerm.trim().toLowerCase();
+                          if (!term) return true;
+                          const values = [
+                            it.product_code,
+                            it.product_name || it.name,
+                            it.description,
+                            it.weight_or_volume,
+                            it.lot_number,
+                            it.expiry_date,
+                            it.quantity
+                          ]
+                            .filter((v) => v !== undefined && v !== null)
+                            .map((v) => String(v).toLowerCase())
+                            .join(' ');
+                          return values.includes(term);
+                        })
+                        .map((it) => (
+                          <tr key={it.id} style={{ borderBottom: '1px solid #f3f4f6' }}>
+                            <td style={{ padding: '10px 12px', width: '120px' }}><strong>{it.product_code || ''}</strong></td>
+                            <td style={{ padding: '10px 12px' }}>{it.product_name || it.name || ''}</td>
+                            <td style={{ padding: '10px 12px' }}>{it.description || ''}</td>
+                            <td style={{ padding: '10px 12px' }}>{it.weight_or_volume || ''}</td>
+                            <td style={{ padding: '10px 12px' }}>{it.lot_number || ''}</td>
+                            <td style={{ padding: '10px 12px' }}>{it.expiry_date || ''}</td>
+                            <td style={{ padding: '10px 12px', width: '100px' }}>{it.quantity ?? ''}</td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
