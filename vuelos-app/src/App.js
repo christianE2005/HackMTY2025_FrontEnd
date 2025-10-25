@@ -42,7 +42,7 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState('24-10-2025');
   const [tipoVuelo, setTipoVuelo] = useState('nacionales');
-  const [vueloSeleccionado, setVueloSeleccionado] = useState(null);
+  // selected flight state is passed through navigation state; no local state needed
   const [vuelos] = useState([
     {
       id: 1,
@@ -82,19 +82,14 @@ function Home() {
 
   const navigate = useNavigate();
   const handleGenerarMenuIA = (vuelo) => {
-    setVueloSeleccionado(vuelo);
     // navigate to menu-ia route and pass vuelo in location.state
     navigate('/menu-ia', { state: { vuelo } });
   };
   const handleSimularML = (vuelo) => {
-    setVueloSeleccionado(vuelo);
-    setVistaActual('ml');
+    // navigate to simular-ml route and pass vuelo in location.state
+    // navigate to simular-ml route and pass vuelo in location.state
+    navigate('/simular-ml', { state: { vuelo } });
   };
-  if (vistaActual === 'menui-a') {
-    return <MenuIA vueloSeleccionado={vueloSeleccionado} onBack={() => setVistaActual('vuelos')} />;
-  }else  if (vistaActual === 'ml') {
-    return <SimularML vueloSeleccionado={vueloSeleccionado} onBack={() => setVistaActual('vuelos')} />;
-  }
   return (
     <div className="app-container">
       {/* Header */}
@@ -215,13 +210,21 @@ function MenuIARouteWrapper() {
   return <MenuIA vueloSeleccionado={vuelo} onBack={() => navigate('/')} />;
 }
 
+function SimularMLRouteWrapper() {
+  const location = useLocation();
+  const vuelo = location.state?.vuelo || null;
+  const navigate = useNavigate();
+  return <SimularML vueloSeleccionado={vuelo} onBack={() => navigate('/')} />;
+}
+
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/menu-ia" element={<MenuIARouteWrapper />} />
-        <Route path="/inventario" element={<Inventory />} />
+  <Route path="/menu-ia" element={<MenuIARouteWrapper />} />
+  <Route path="/simular-ml" element={<SimularMLRouteWrapper />} />
+  <Route path="/inventario" element={<Inventory />} />
       </Routes>
     </Router>
   );
