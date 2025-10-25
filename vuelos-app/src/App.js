@@ -42,7 +42,7 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState('24-10-2025');
   const [tipoVuelo, setTipoVuelo] = useState('nacionales');
-  const [vueloSeleccionado, setVueloSeleccionado] = useState(null);
+  // selected flight state is passed through navigation state; no local state needed
   const [vuelos] = useState([
     {
       id: 1,
@@ -82,12 +82,11 @@ function Home() {
 
   const navigate = useNavigate();
   const handleGenerarMenuIA = (vuelo) => {
-    setVueloSeleccionado(vuelo);
     // navigate to menu-ia route and pass vuelo in location.state
     navigate('/menu-ia', { state: { vuelo } });
   };
   const handleSimularML = (vuelo) => {
-    setVueloSeleccionado(vuelo);
+    // navigate to simular-ml route and pass vuelo in location.state
     // navigate to simular-ml route and pass vuelo in location.state
     navigate('/simular-ml', { state: { vuelo } });
   };
