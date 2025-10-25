@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import MenuIA from './MenuIA';
 import SimularML from './SimularML';
+import Inventory from './Inventory';
 import './App.css';
 
 // Ícono de avión SVG
@@ -36,11 +38,10 @@ const SearchIcon = () => (
   </svg>
 );
 
-function App() {
+function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState('24-10-2025');
   const [tipoVuelo, setTipoVuelo] = useState('nacionales');
-  const [vistaActual, setVistaActual] = useState('vuelos'); // 'vuelos' o 'menuia'
   const [vueloSeleccionado, setVueloSeleccionado] = useState(null);
   const [vuelos] = useState([
     {
@@ -79,19 +80,19 @@ function App() {
     console.log('Filtrando vuelos...', { searchTerm, startDate, tipoVuelo });
   };
 
+  const navigate = useNavigate();
   const handleGenerarMenuIA = (vuelo) => {
     setVueloSeleccionado(vuelo);
-    setVistaActual('menuia');
+    // navigate to menu-ia route and pass vuelo in location.state
+    navigate('/menu-ia', { state: { vuelo } });
   };
   const handleSimularML = (vuelo) => {
     setVueloSeleccionado(vuelo);
     setVistaActual('ml');
   };
-
-  if (vistaActual === 'menuia') {
+  if (vistaActual === 'menui-a') {
     return <MenuIA vueloSeleccionado={vueloSeleccionado} onBack={() => setVistaActual('vuelos')} />;
-  }
-  else  if (vistaActual === 'ml') {
+  }else  if (vistaActual === 'ml') {
     return <SimularML vueloSeleccionado={vueloSeleccionado} onBack={() => setVistaActual('vuelos')} />;
   }
   return (
@@ -204,6 +205,25 @@ function App() {
         </div>
       </main>
     </div>
+  );
+}
+
+function MenuIARouteWrapper() {
+  const location = useLocation();
+  const vuelo = location.state?.vuelo || null;
+  const navigate = useNavigate();
+  return <MenuIA vueloSeleccionado={vuelo} onBack={() => navigate('/')} />;
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/menu-ia" element={<MenuIARouteWrapper />} />
+        <Route path="/inventario" element={<Inventory />} />
+      </Routes>
+    </Router>
   );
 }
 
