@@ -88,13 +88,9 @@ function Home() {
   };
   const handleSimularML = (vuelo) => {
     setVueloSeleccionado(vuelo);
-    setVistaActual('ml');
+    // navigate to simular-ml route and pass vuelo in location.state
+    navigate('/simular-ml', { state: { vuelo } });
   };
-  if (vistaActual === 'menui-a') {
-    return <MenuIA vueloSeleccionado={vueloSeleccionado} onBack={() => setVistaActual('vuelos')} />;
-  }else  if (vistaActual === 'ml') {
-    return <SimularML vueloSeleccionado={vueloSeleccionado} onBack={() => setVistaActual('vuelos')} />;
-  }
   return (
     <div className="app-container">
       {/* Header */}
@@ -215,13 +211,21 @@ function MenuIARouteWrapper() {
   return <MenuIA vueloSeleccionado={vuelo} onBack={() => navigate('/')} />;
 }
 
+function SimularMLRouteWrapper() {
+  const location = useLocation();
+  const vuelo = location.state?.vuelo || null;
+  const navigate = useNavigate();
+  return <SimularML vueloSeleccionado={vuelo} onBack={() => navigate('/')} />;
+}
+
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/menu-ia" element={<MenuIARouteWrapper />} />
-        <Route path="/inventario" element={<Inventory />} />
+  <Route path="/menu-ia" element={<MenuIARouteWrapper />} />
+  <Route path="/simular-ml" element={<SimularMLRouteWrapper />} />
+  <Route path="/inventario" element={<Inventory />} />
       </Routes>
     </Router>
   );
