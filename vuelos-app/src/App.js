@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import MenuIA from './MenuIA';
+import SimularML from './SimularML';
 import Inventory from './Inventory';
 import './App.css';
 
@@ -85,7 +86,18 @@ function Home() {
     // navigate to menu-ia route and pass vuelo in location.state
     navigate('/menu-ia', { state: { vuelo } });
   };
+  const handleSimularML = (vuelo) => {
+    setVueloSeleccionado(vuelo);
+    setVistaActual('ml');
+  };
+  const handleSimularML = (vuelo) => {
+    setVueloSeleccionado(vuelo);
+    setVistaActual('ml');
+  };
 
+  if (vistaActual === 'menuia') {
+    return <MenuIA vueloSeleccionado={vueloSeleccionado} onBack={() => setVistaActual('vuelos')} />;
+  }
   return (
     <div className="app-container">
       {/* Header */}
@@ -185,7 +197,7 @@ function Home() {
                 </span>
               </div>
               <div>
-                <button className="action-button">Simular Menú con ML</button>
+                <button className="action-button" onClick={() => handleSimularML(vuelo)}>Simular Menú con ML</button>
               </div>
               <div>
                 <button className="action-button" onClick={() => handleGenerarMenuIA(vuelo)}
