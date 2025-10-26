@@ -20,10 +20,37 @@ const ArrowLeftIcon = () => (
 
 const KPIsMejorados = ({ onBack, vueloSeleccionado }) => {
   const [kpis] = useState({
-    rcp: 1.47, // Ratio de Consumo por Pasajero
-    ctd: 450, // Costo Total de Desperdicio (MXN)
-    cpp: 85.50, // Costo por Pasajero (MXN)
-    put: 88 // Tasa de Utilización por Producto (%)
+    rcp: { 
+      valor: 1.47, 
+      max: 2.0,
+      titulo: 'RCP',
+      subtitulo: 'Ratio de Consumo por Pasajero',
+      icono: '📊'
+    },
+    ctd: { 
+      valor: 450, 
+      max: 1000,
+      titulo: 'CTD',
+      subtitulo: 'Costo Total de Desperdicio',
+      icono: '💰',
+      unidad: 'MXN'
+    },
+    cpp: { 
+      valor: 85.50, 
+      max: 150,
+      titulo: 'CPP',
+      subtitulo: 'Costo por Pasajero',
+      icono: '💵',
+      unidad: 'MXN'
+    },
+    put: { 
+      valor: 88, 
+      max: 100,
+      titulo: 'PUT',
+      subtitulo: 'Tasa de Utilización por Producto',
+      icono: '📦',
+      unidad: '%'
+    }
   });
 
   const [proyeccionConsumo] = useState([
@@ -47,6 +74,7 @@ const KPIsMejorados = ({ onBack, vueloSeleccionado }) => {
   ]);
 
   const costoTotal = costos.reduce((sum, item) => sum + item.costo, 0);
+  const calcularPorcentaje = (valor, max) => (valor / max) * 100;
 
   return (
     <div className="kpis-container">
@@ -73,65 +101,65 @@ const KPIsMejorados = ({ onBack, vueloSeleccionado }) => {
           <p className="kpis-subtitle">Análisis detallado de consumo y optimización</p>
         </div>
 
-        {/* KPIs Cards */}
-        <div className="kpis-cards">
-          <div className="kpi-card">
-            <div className="kpi-icon">📊</div>
-            <h3>RCP</h3>
-            <p className="kpi-value">{kpis.rcp}</p>
-            <p className="kpi-title-desc">Ratio de Consumo por Pasajero</p>
-          </div>
+        {/* KPIs estilo segundo código */}
+        <div className="kpis-graficos-pequeños">
+          {Object.entries(kpis).map(([key, kpi]) => (
+            <div key={key} className="kpi-grafico-card-pequeño">
+              <div className="kpi-mini-header">
+                <span className="kpi-mini-icono">{kpi.icono}</span>
+                <div className="kpi-mini-info">
+                  <h4 className="kpi-mini-titulo">{kpi.titulo}</h4>
+                  <p className="kpi-mini-subtitulo">{kpi.subtitulo}</p>
+                </div>
+              </div>
+              
+              <div className="kpi-mini-valor">
+                <span className="valor-mini">
+                  {kpi.unidad && kpi.unidad !== '%' && '$'}
+                  {kpi.valor}
+                  {kpi.unidad === '%' && '%'}
+                  {kpi.unidad === 'MXN' && ' MXN'}
+                </span>
+              </div>
 
-          <div className="kpi-card">
-            <div className="kpi-icon">💰</div>
-            <h3>CTD</h3>
-            <p className="kpi-value">${kpis.ctd} MXN</p>
-            <p className="kpi-title-desc">Costo Total de Desperdicio</p>
-          </div>
-
-          <div className="kpi-card">
-            <div className="kpi-icon">💵</div>
-            <h3>CPP</h3>
-            <p className="kpi-value">${kpis.cpp} MXN</p>
-            <p className="kpi-title-desc">Costo por Pasajero</p>
-          </div>
-
-          <div className="kpi-card">
-            <div className="kpi-icon">📦</div>
-            <h3>PUT</h3>
-            <p className="kpi-value">{kpis.put}%</p>
-            <p className="kpi-title-desc">Tasa de Utilización por Producto</p>
-          </div>
+              <div className="kpi-barra-mini">
+                <div 
+                  className="kpi-barra-fill-mini" 
+                  style={{ width: `${calcularPorcentaje(kpi.valor, kpi.max)}%` }}
+                ></div>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Gráficos Horizontales */}
+        {/* Gráficos principales (del primer código) */}
         <div className="graficos-section">
           <h2 className="graficos-title">Análisis Visual</h2>
           
           <div className="graficos-horizontal">
-            {/* Gráfico 1: Proyección de Consumo */}
+            {/* 1. Proyección de Consumo */}
             <div className="grafico-card">
-              <h3>Proyección de Consumo (Sugerido)</h3>
-              <div className="chart-container">
+            <h3>Proyección de Consumo (Sugerido)</h3>
+            <div className="chart-container">
                 <div className="bar-chart">
-                  {proyeccionConsumo.map((item, index) => (
+                {proyeccionConsumo.map((item, index) => (
                     <div key={index} className="bar-item">
-                      <div className="bar-label">{item.mes}</div>
-                      <div className="bar-wrapper">
+                    <div className="bar-wrapper">
                         <div 
-                          className="bar-fill" 
-                          style={{ width: `${item.valor}%` }}
+                        className="bar-fill" 
+                        style={{ height: `${item.valor}%` }}
                         >
-                          <span className="bar-value">{item.valor}%</span>
+                        <span className="bar-value">{item.valor}%</span>
                         </div>
-                      </div>
                     </div>
-                  ))}
+                    <div className="bar-label">{item.mes}</div>
+                    </div>
+                ))}
                 </div>
-              </div>
+            </div>
             </div>
 
-            {/* Gráfico 2: Consumo vs Desperdicio */}
+            {/* 2. Consumo vs Desperdicio */}
             <div className="grafico-card">
               <h3>Vuelo Anterior: AM433<br/>(Consumo vs Desperdicio)</h3>
               <div className="chart-container">
@@ -177,7 +205,7 @@ const KPIsMejorados = ({ onBack, vueloSeleccionado }) => {
               </div>
             </div>
 
-            {/* Gráfico 3: Distribución de Costos */}
+            {/* 3. Distribución de Costos */}
             <div className="grafico-card">
               <h3>💰 Distribución de Costos por Categoría</h3>
               <div className="chart-container">
