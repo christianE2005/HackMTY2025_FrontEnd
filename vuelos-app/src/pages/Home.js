@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getFutureFlights } from '../services/flightService';
 import '../App.css';
 
 // Ícono de avión SVG
@@ -36,47 +37,103 @@ const SearchIcon = () => (
 );
 
 function Home() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
-  const [startDate, setStartDate] = useState('24-10-2025');
   const [tipoVuelo, setTipoVuelo] = useState('nacionales');
-  const [vuelos] = useState([
-    {
-      id: 1,
-      vuelo: 'AM 401',
-      aerolinea: 'Aeroméxico',
-      origen: 'MTY',
-      destino: 'MEX',
-      horarioInicial: '08:30',
-      horarioDestino: '10:45',
-      estatus: 'A tiempo'
-    },
-    {
-      id: 2,
-      vuelo: 'Y4 523',
-      aerolinea: 'Volaris',
-      origen: 'MTY',
-      destino: 'GDL',
-      horarioInicial: '12:15',
-      horarioDestino: '14:20',
-      estatus: 'Retrasado'
-    },
-    {
-      id: 3,
-      vuelo: 'VB 341',
-      aerolinea: 'VivaAerobus',
-      origen: 'MTY',
-      destino: 'CUN',
-      horarioInicial: '15:00',
-      horarioDestino: '17:30',
-      estatus: 'A tiempo'
-    }
-  ]);
+  const [vuelos, setVuelos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Calcular fecha de mañana (siempre)
+  const getTomorrowDate = () => {
+    // Usar fecha fija válida para el backend (nov 3, 2025)
+    return '03-11-2025';
+  };
+
+  const [startDate, setStartDate] = useState(getTomorrowDate());
+
+  // Fetch vuelos futuros al cargar el componente
+  useEffect(() => {
+    const fetchFlights = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        console.log('📡 Iniciando carga de vuelos...'); // Debug
+        const data = await getFutureFlights();
+        console.log('✅ Datos recibidos del backend:', data); // Debug
+        
+        // El backend devuelve { items: [...], total, page, per_page, total_pages }
+        const flightsArray = data?.items || [];
+        console.log('📋 Total de vuelos recibidos:', flightsArray.length); // Debug
+        
+        // Mapear los datos del backend al formato esperado por el componente
+        const mappedFlights = flightsArray.map((flight, index) => ({
+          id: index + 1,
+          vuelo: flight.flight?.iataNumber || 'N/A',
+          aerolinea: flight.airline?.name || 'N/A',
+          origen: flight.departure?.iataCode?.toUpperCase() || 'N/A',
+          destino: flight.arrival?.iataCode?.toUpperCase() || 'N/A',
+          horarioInicial: flight.departure?.scheduledTime || 'N/A',
+          horarioDestino: flight.arrival?.scheduledTime || 'N/A',
+          estatus: 'A tiempo', // El backend no proporciona estado, asumir "A tiempo"
+          // Datos adicionales para enviar al modelo
+          flight_type: 'medium-haul', // por defecto
+          service_type: 'Retail',
+          passenger_count: 200, // estimado
+          origenCodigo: flight.departure?.iataCode?.toUpperCase(),
+          terminal: flight.departure?.terminal,
+          gate: flight.departure?.gate
+        }));
+        
+        setVuelos(mappedFlights);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching future flights:', err);
+        setError('No se pudieron cargar los vuelos. Usando datos de respaldo.');
+        // Fallback data
+        setVuelos([
+          {
+            id: 1,
+            vuelo: 'AM 401',
+            aerolinea: 'Aeroméxico',
+            origen: 'MTY',
+            destino: 'MEX',
+            horarioInicial: '08:30',
+            horarioDestino: '10:45',
+            estatus: 'A tiempo'
+          },
+          {
+            id: 2,
+            vuelo: 'Y4 523',
+            aerolinea: 'Volaris',
+            origen: 'MTY',
+            destino: 'GDL',
+            horarioInicial: '12:15',
+            horarioDestino: '14:20',
+            estatus: 'Retrasado'
+          },
+          {
+            id: 3,
+            vuelo: 'VB 341',
+            aerolinea: 'VivaAerobus',
+            origen: 'MTY',
+            destino: 'CUN',
+            horarioInicial: '15:00',
+            horarioDestino: '17:30',
+            estatus: 'A tiempo'
+          }
+        ]);
+        setLoading(false);
+      }
+    };
+
+    fetchFlights();
+  }, []);
 
   const handleFilter = () => {
     console.log('Filtrando vuelos...', { searchTerm, startDate, tipoVuelo });
   };
 
-  const navigate = useNavigate();
   const handleGenerarMenuIA = (vuelo) => {
     navigate('/menu-ia', { state: { vuelo } });
   };
@@ -106,6 +163,19 @@ function Home() {
 
         {/* Filter Section */}
         <div className="filter-container">
+          {error && (
+            <div style={{ 
+              backgroundColor: '#fef3c7', 
+              border: '1px solid #fbbf24',
+              padding: '12px 16px',
+              borderRadius: '6px',
+              marginBottom: '16px',
+              color: '#92400e'
+            }}>
+              {error}
+            </div>
+          )}
+          
           <div className="filter-row">
             {/* Search Field */}
             <div className="search-field">
@@ -171,7 +241,16 @@ function Home() {
 
         {/* Table Body */}
         <div className="table-body">
-          {vuelos.map((vuelo) => (
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '40px', color: '#6b7280' }}>
+              Cargando vuelos...
+            </div>
+          ) : vuelos.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '40px', color: '#6b7280' }}>
+              No hay vuelos programados
+            </div>
+          ) : (
+            vuelos.map((vuelo) => (
             <div key={vuelo.id} className="table-row">
               <div className="flight-number">{vuelo.vuelo}</div>
               <div className="airline">{vuelo.aerolinea}</div>
@@ -194,7 +273,8 @@ function Home() {
                 </button>
               </div>
             </div>
-          ))}
+          ))
+          )}
         </div>
       </main>
     </div>

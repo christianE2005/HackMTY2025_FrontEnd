@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getInventoryFlat } from '../services/productService';
+import { API_BASE_URL } from '../services/api';
 import '../App.css';
 
 // Ícono de flecha para regresar
@@ -25,8 +26,10 @@ const Inventory = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [backendErrorDetail, setBackendErrorDetail] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+  const inventoryUrl = `${API_BASE_URL}/products/inventory/flat`;
 
   useEffect(() => {
     // Fetch products from backend using the productService
@@ -38,6 +41,7 @@ const Inventory = () => {
         setLoading(false);
       } catch (err) {
         console.error('Error cargando productos desde el backend:', err);
+        setBackendErrorDetail(err?.message || String(err));
         // Fallback mock data
         const mock = [
           { 
@@ -81,15 +85,14 @@ const Inventory = () => {
             quantity: 50 
           }
         ];
-        setItems(mock);
-        setError('No se pudo conectar con el backend — usando datos de ejemplo. Asegúrate de que el backend esté corriendo en http://localhost:8000 y que el endpoint /api/v1/products/inventory/flat exista');
+    setItems(mock);
+    setError(`No se pudo conectar con el backend — usando datos de ejemplo. Asegúrate de que el backend esté corriendo en ${API_BASE_URL} y que el endpoint /products/inventory/flat exista`);
         setLoading(false);
       }
     };
     
     loadProducts();
   }, []);
-
   return (
     <div className="app-container">
       <header className="header">
@@ -117,6 +120,14 @@ const Inventory = () => {
         ) : (
           <div>
             {error && <p style={{ color: 'orange' }}>{error}</p>}
+            {/* Debug panel: show request URL and backend error detail when present */}
+            {backendErrorDetail && (
+              <div style={{ background: '#fff7ed', border: '1px solid #f59e0b', padding: '10px 12px', borderRadius: '6px', marginBottom: '12px', color: '#92400e' }}>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>Debug — petición de inventario</div>
+                <div style={{ fontSize: 13, marginBottom: 6 }}><strong>Request URL:</strong> {inventoryUrl}</div>
+                <div style={{ fontSize: 13 }}><strong>Error:</strong> {backendErrorDetail}</div>
+              </div>
+            )}
 
             <div style={{ overflowX: 'auto' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '0 0 8px 0' }}>
