@@ -42,19 +42,19 @@ alembic upgrade head
 
 ```powershell
 # Modo desarrollo con auto-reload
-uvicorn src.main:app --reload --host 127.0.0.1 --port 8000
+uvicorn src.main:app --reload --host 127.0.0.1 --port 8002
 
 # O usando el intérprete del entorno virtual directamente
-.\.venv\Scripts\python.exe -m uvicorn src.main:app --reload --host 127.0.0.1 --port 8000
+.\.venv\Scripts\python.exe -m uvicorn src.main:app --reload --host 127.0.0.1 --port 8002
 ```
 
-El servidor estará disponible en: **http://localhost:8000**
+El servidor estará disponible en: **http://localhost:8002**
 
 ## 📚 Documentación Automática
 
 FastAPI genera documentación interactiva automáticamente:
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
+-- **Swagger UI**: http://localhost:8002/docs
+-- **ReDoc**: http://localhost:8002/redoc
 
 ## 🌐 CORS (Conexión con Frontend)
 
@@ -71,7 +71,7 @@ CORS_ALLOWED_ORIGINS=["http://localhost:3000", "https://tu-dominio.com"]
 
 ```javascript
 // Crea un archivo api.js o similar en tu frontend
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'http://localhost:8002';
 
 // Headers comunes
 const headers = {
@@ -284,7 +284,7 @@ function ProductList() {
   const loadProducts = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8000/products');
+  const response = await fetch('http://localhost:8002/products');
       
       if (!response.ok) {
         throw new Error('Error al cargar productos');
@@ -301,7 +301,7 @@ function ProductList() {
 
   const handleCreateProduct = async (productData) => {
     try {
-      const response = await fetch('http://localhost:8000/products', {
+  const response = await fetch('http://localhost:8002/products', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -351,7 +351,7 @@ export default ProductList;
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: 'http://localhost:8002',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -452,7 +452,7 @@ async function apiCall(url, options = {}) {
 
 1. **Variables de entorno en frontend**:
    ```javascript
-   const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8002';
    ```
 
 2. **Interceptores para autenticación** (si agregas auth):

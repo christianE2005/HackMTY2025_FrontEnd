@@ -4,6 +4,8 @@ import Home from './pages/Home';
 import MenuIA from './pages/MenuIA';
 import SimularML from './pages/SimularML';
 import Inventory from './pages/Inventory';
+import PredictionResults from './pages/PredictionResults';
+import KPIsMejorados from './pages/KPIsMejorados';
 import './App.css';
 
 function MenuIARouteWrapper() {
@@ -20,6 +22,13 @@ function SimularMLRouteWrapper() {
   return <SimularML vueloSeleccionado={vuelo} onBack={() => navigate('/')} />;
 }
 
+function KPIsMejoradosRouteWrapper() {
+  const location = useLocation();
+  const vuelo = location.state?.vuelo || null;
+  const navigate = useNavigate();
+  return <KPIsMejorados vueloSeleccionado={vuelo} onBack={() => navigate('/')} />;
+}
+
 function App() {
   return (
     <Router>
@@ -27,7 +36,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/menu-ia" element={<MenuIARouteWrapper />} />
         <Route path="/simular-ml" element={<SimularMLRouteWrapper />} />
+        <Route path="/KPIsMejorados" element={<KPIsMejoradosRouteWrapper />} />
+        <Route path="/kpi-mejorados" element={<KPIsMejoradosRouteWrapper />} />
         <Route path="/inventario" element={<Inventory />} />
+        <Route path="/prediction-results" element={<PredictionResults />} />
       </Routes>
     </Router>
   );

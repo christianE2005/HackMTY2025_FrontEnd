@@ -59,11 +59,34 @@ export async function deleteProduct(productId) {
 
 /**
  * Obtener inventario aplanado (flat) usado por la UI de inventario
- * Endpoint: /api/v1/products/inventory/flat
+ * Endpoint: /products/inventory/flat
  */
 export async function getInventoryFlat() {
-  // The backend exposes the inventory flat endpoint under /products/inventory/flat (no /api/v1 prefix)
-  return apiCall(buildUrl('/products/inventory/flat'), {
-    method: 'GET',
-  });
+  // The backend exposes the inventory flat endpoint under /products/inventory/flat (exact route)
+  const primary = buildUrl('/products/inventory/flat');
+  console.log('📦 Fetching inventory from (primary):', primary);
+
+  // Try primary endpoint first. If it fails (500, connection error, etc.),
+  // attempt a fallback using the same host but port 8003 (some services were moved there).
+  let fallback = null;
+  try {
+    return await apiCall(primary, { method: 'GET' });
+  } catch (errPrimary) {
+    console.warn('Primary inventory endpoint failed:', errPrimary);
+
+    try {
+      // Construct fallback by replacing port with 8003
+      const u = new URL(primary);
+      u.port = '8003';
+      fallback = u.toString();
+      console.log('📦 Trying fallback inventory URL:', fallback);
+      return await apiCall(fallback, { method: 'GET' });
+    } catch (errFallback) {
+      console.error('Both inventory endpoints failed:', errPrimary, errFallback);
+      // Throw a combined error so caller can show both details
+      const message = `Primary (${primary}) error: ${errPrimary.message}; Fallback (${fallback}) error: ${errFallback.message}`;
+      const composed = new Error(message);
+      throw composed;
+    }
+  }
 }

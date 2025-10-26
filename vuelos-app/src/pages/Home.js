@@ -22,6 +22,7 @@ const SearchIcon = () => (
 );
 
 function Home() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState('2025-10-24');
   const [tipoVuelo, setTipoVuelo] = useState('nacionales');
@@ -93,6 +94,19 @@ function Home() {
         </div>
 
         <div className="filter-container">
+          {error && (
+            <div style={{ 
+              backgroundColor: '#fef3c7', 
+              border: '1px solid #fbbf24',
+              padding: '12px 16px',
+              borderRadius: '6px',
+              marginBottom: '16px',
+              color: '#92400e'
+            }}>
+              {error}
+            </div>
+          )}
+          
           <div className="filter-row">
             <div className="search-field">
               <input
@@ -176,7 +190,8 @@ function Home() {
                 </button>
               </div>
             </div>
-          ))}
+          ))
+          )}
         </div>
       </main>
     </div>
